@@ -2,8 +2,7 @@ Team Member Names: Austin Eubank, Frank Conlon, Zohreh Safari
 
 Installation: Use the make file to compile the program.
 
-Running: To run type mpirun -np ## ./source .
-## - Can be either 1, 2, or 4 processes.
+Running: To run type ./source .
 
 Command Line Arguments:
 1: dim, default dim = 128
