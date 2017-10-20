@@ -1,12 +1,11 @@
 #include "mainHeader.h"
 
 
-void initializeKM(struct kmeans ** KM, int dim, int ndata, int subdomain, double * dataArray, int k)
+void initializeKM(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k)
 {
   *KM = (struct kmeans *)malloc(sizeof(struct kmeans));
   (*KM)->dim = dim;
   (*KM)->ndata = ndata;
-  (*KM)->subdomain = subdomain;
   (*KM)->data = dataArray;
   (*KM)->k = k;
   (*KM)->cluster_size = allocateAndInitializeZeroInt(k);
@@ -53,10 +52,11 @@ double * allocateAndInitializeZeroDouble(int size_of_target)
 	return target;
 }
 
-void kmeans(struct kmeans ** KM, int dim, int ndata, int subdomain, double * dataArray, int k)
+void kmeans(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k)
 {
-  initializeKM(KM,dim,ndata,subdomain,dataArray,k);
+  initializeKM(KM,dim,ndata,dataArray,k);
   GetKCentroids(*KM);
+  if (BUILD_TERM) { printf("Terminate process \n"); exit(0); }
   ClusterizeKM(*KM);
   return;
 }

@@ -9,27 +9,22 @@ void displayKM(struct kmeans * KM)
 	printDataArray(KM->data, KM->dim, KM->ndata);
 
 	printf("cluster_size: \n");
-	printArraysInt(KM->cluster_size, KM->k, "size of cluster");
+	printArrayInt(KM->cluster_size, KM->k, "size of cluster");
 
 	printf("cluster_start: \n");
-	printArraysInt(KM->cluster_start, KM->k, "start of cluster");
+	printArrayInt(KM->cluster_start, KM->k, "start of cluster");
 
-	printf("cluster_radius: \n");
-	printArrayDouble(KM->cluster_radius, KM->k, "radius of cluster");
+	printArrayDouble(KM->cluster_radius, KM->k, "radius of cluster", "cluster_radius:");
 
-	printf("cluster_centroid: \n");
-	printArraysDouble(KM->cluster_centroid, KM->k, KM->dim, "centroid of cluster");
+	printArraysDouble(KM->cluster_centroid, KM->k, KM->dim, "centroid of cluster", "cluster_centroid:");
 
 	printf("cluster_assign: \n");
-	printArraysInt(KM->cluster_assign, KM->ndata, "cluster of DP");
-
-	// printf("cluster_group: \n");
-	// printArraysInt(KM->cluster_group, KM->ndata, "data point-> ");
+	printArrayInt(KM->cluster_assign, KM->ndata, "cluster of DP");
 
 	return;
 }
 
-void printArraysInt(int * ArrayInt, int size, const char * text)
+void printArrayInt(int * ArrayInt, int size, const char * text)
 {
 	int i;
 	for (i = 0; i < size; i++)
@@ -39,9 +34,10 @@ void printArraysInt(int * ArrayInt, int size, const char * text)
 	return;
 }
 
-void printArraysDouble(double ** ArrayDouble, int size, int dim, const char * text)
+void printArraysDouble(double ** ArrayDouble, int size, int dim, const char * text, const char * headingText)
 {
 	int i, j;
+	printf("%s \n",headingText);
 	for (i = 0; i < size; i++)
 	{
 		printf("%s %d = ( ", text, i);
@@ -136,9 +132,10 @@ void printArrayDoubles(double * nums, int ndata, int dim)
 	printf("\n");
 }
 
-void printArrayDouble(double * ArrayDouble, int size, const char * text)
+void printArrayDouble(double * ArrayDouble, int size, const char * text, const char * headingText)
 {
 	int i, j;
+	printf("%s \n",headingText);
 	for (i = 0; i < size; i++)
 	{
 		printf("%s %d = ( ", text, i);
@@ -170,7 +167,7 @@ void printStack(struct stackBase *stack)
 	struct stackNode * iterator = stack->firstNode;
 	int i;
 	printf("Stack: \n");
-	printf("stackDepth = %d, firstNode = %p \n", stack->stackDepth,(void *)stack->firstNode);
+	printf("stackDepth = %d\n", stack->stackDepth);
 	while (iterator != NULL)
 	{
 		for (i = 0; i < stack->arraySize; i++)

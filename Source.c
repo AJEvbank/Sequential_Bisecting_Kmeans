@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 
 struct kmeans * KM = NULL;
 
-kmeans(&KM,dim,ndata,ndata,dataArray,k);
+kmeans(&KM,dim,ndata,dataArray,k);
 
 
 //The search can now be run.

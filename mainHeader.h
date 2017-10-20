@@ -20,6 +20,8 @@
 #define QSEED 30
 #define SEEDMULT 1
 
+#define BUILD_TERM 1
+
 /* Data Structures */
 
 enum isNumStates {
@@ -34,7 +36,6 @@ enum isNumStates {
 struct kmeans {
 	int dim;
 	int ndata;
-	int subdomain;
 	double * data;
 	int k;
 	int * cluster_size;
@@ -78,7 +79,7 @@ void setSeedArray(unsigned int * seedArray, int seedMult);
 
 /* initialize the kmeans structure */
 
-void initializeKM(struct kmeans ** KM, int dim, int ndata, int subdomain, double * dataArray, int k);
+void initializeKM(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k);
 
 int * allocateAndInitializeZeroInt(int size_of_target);
 
@@ -86,15 +87,15 @@ double ** allocateAndInitializeZeroDoubleMulti(int k, int dimension);
 
 double * allocateAndInitializeZeroDouble(int size_of_target);
 
-void kmeans(struct kmeans ** KM, int dim, int ndata, int subdomain, double * dataArray, int k);
+void kmeans(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k);
 
 /* debugging displays - DEBUG.c */
 
 void displayKM(struct kmeans * KM);
 
-void printArraysInt(int * ArrayInt, int size, const char * text);
+void printArrayInt(int * ArrayInt, int size, const char * text);
 
-void printArraysDouble(double ** ArrayDouble, int size, int dim, const char * text);
+void printArraysDouble(double ** ArrayDouble, int size, int dim, const char * text, const char * headingText);
 
 void printArrayKMD(double * array, int size);
 
@@ -102,13 +103,33 @@ void printDataArray(double * dataArray, int dim, int ndata);
 
 void writeResults(int dim, int ndata, double* data, int* cluster_assign);
 
-void printArrayDouble(double * ArrayDouble, int size, const char * text);
+void printArrayDouble(double * ArrayDouble, int size, const char * text, const char * headingText);
 
 void printStack(struct stackBase *stack);
 
 /* GetKCentroids.c */
 
 void GetKCentroids(struct kmeans * KM);
+
+int Bisect(struct kmeans * KM, double * SSEArray, int Bigk, int currentCluster);
+
+int LargestSSE(double * SSEArray, int Bigk);
+
+int GetRandomInCluster(struct kmeans * KM, int currentCluster);
+
+int GetFurthestPointInCluster(struct kmeans * KM, int firstPoint, int currentCluster);
+
+double GetDistance2Points(struct kmeans * KM, int first_index_Point, int first_index_firstPoint);
+
+void setCentroid(struct kmeans * KM, int A, int firstPoint);
+
+void AssignDPsAB(struct kmeans * KM, int A, int B);
+
+int RecalculateCentroidsAB(struct kmeans * KM, int A, int B);
+
+void CalculateSSE(struct kmeans * KM, double * SSEArray, int A, int B);
+
+
 
 int GetNextCluster(struct kmeans * KM, int numClusters);
 
