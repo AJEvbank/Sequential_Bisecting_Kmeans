@@ -129,6 +129,8 @@ int RecalculateCentroidsAB(struct kmeans * KM, int A, int B);
 
 void CalculateSSE(struct kmeans * KM, double * SSEArray, int A, int B);
 
+double Sigma(double * distances, int size, double meanDist);
+
 
 
 int GetNextCluster(struct kmeans * KM, int numClusters);

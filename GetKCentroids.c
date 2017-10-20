@@ -204,38 +204,44 @@ void CalculateSSE(struct kmeans * KM, double * SSEArray, int A, int B)
   double * meanDistAB = (double *)malloc(sizeof(double) * 2);
   double * distancesA = (double *)malloc(sizeof(double) * (KM->cluster_size)[A]);
   double * distancesB = (double *)malloc(sizeof(double) * (KM->cluster_size)[B]);
-  int i,j,first_index,stepA = -1,stepB = -1;
+  int i,first_index,stepA = -1,stepB = -1;
   for ( i = 0; i < KM->ndata; i++)
   {
     if ((KM->cluster_assign)[i] == A)
     {
-      step++;
+      stepA++;
       first_index = i * KM->dim;
-
-      meanDistAB[0] += GetDistance2PointsDC(KM,first_index,A);
+      distancesA[stepA] = GetDistance2PointsDC(KM,first_index,A);
+      meanDistAB[0] += distancesA[stepA];
     }
     else if ((KM->cluster_assign)[i] == B)
     {
-      step++;
+      stepB++;
       first_index = i * KM->dim;
-      meanDistAB[1] += GetDistance2PointsDC(KM,first_index,B);
+      distancesB[stepB] = GetDistance2PointsDC(KM,first_index,B);
+      meanDistAB[1] += distancesB[stepB];
     }
   }
 
   meanDistAB[0] /= (KM->cluster_size)[A];
   meanDistAB[1] /= (KM->cluster_size)[B];
 
+  SSEArray[A] = Sigma(distancesA,(KM->cluster_size)[A],meanDistAB[0]);
+  SSEArray[B] = Sigma(distancesB,(KM->cluster_size)[B],meanDistAB[1]);
 
-
-
-
-
-
-
-  return SSE;
+  return;
 }
 
-
+double Sigma(double * distances, int size, double meanDist)
+{
+  double SSE;
+  int i;
+  for (i = 0; i < size; i++)
+  {
+    SSE += pow( fabs(distances[i] - meanDist), 2);
+  }
+  return SSE;
+}
 
 
 
