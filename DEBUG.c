@@ -107,6 +107,39 @@ void writeResults(int dim, int ndata, double* data, int* cluster_assign)
 	fclose(file);
 }
 
+void write_results_parallel(int dim, int ndata, double *data, int *cluster_assign, int k, double **cluster_centroids, int world_rank)
+{
+    FILE *output_file;
+    char file_name[100];
+    sprintf(file_name, "data_%d.txt", world_rank);
+    output_file = fopen(file_name, "w");
+    // Write the number of data points
+       fprintf(output_file, "%d\n", ndata);
+    // Write out the data points and their cluster assignments
+    int i, j;
+    for (i = 0; i < ndata; i++)
+    {
+			for (j = 0; j < dim; j++)
+     		fprintf(output_file, "%lf ", data[i * dim + j]);
+	    fprintf(output_file, "%d \n", cluster_assign[i]);
+    }
+    fclose(output_file);
+    if (world_rank == 0)
+    {
+        // Write centroid information
+        output_file = fopen("centroids.txt", "w");
+        fprintf(output_file, "%d\n", k);
+        for (i = 0; i < k; i++)
+				{
+            for (j = 0; j < dim; j++)
+                fprintf(output_file, "%lf ", cluster_centroids[i][j]);
+            fprintf(output_file, "\n");
+        }
+        fclose(output_file);
+    }
+		return;
+}
+
 void printArray(int * nums, int count)
 {
 	int i;
@@ -178,4 +211,50 @@ void printStack(struct stackBase *stack)
 		printf("\n\n");
 		iterator = iterator->nextNode;
 	}
+}
+
+void displaySelectedFromKM(struct kmeans * KM, int singleValues, int dataArray, int cluster_size, int cluster_start, int cluster_radius, int cluster_centroid, int cluster_assign)
+{
+	printf("Kmeans: \n");
+
+	if (singleValues)
+	{
+		printf("dim = %d, ndata = %d, k = %d \n", KM->dim, KM->ndata, KM->k);
+	}
+
+	if (dataArray)
+	{
+		printf("Working data array: \n");
+		printDataArray(KM->data, KM->dim, KM->ndata);
+	}
+
+	if (cluster_size)
+	{
+		printf("cluster_size: \n");
+		printArrayInt(KM->cluster_size, KM->k, "size of cluster");
+	}
+
+	if (cluster_start)
+	{
+		printf("cluster_start: \n");
+		printArrayInt(KM->cluster_start, KM->k, "start of cluster");
+	}
+
+	if (cluster_radius)
+	{
+		printArrayDouble(KM->cluster_radius, KM->k, "radius of cluster", "cluster_radius:");
+	}
+
+	if (cluster_centroid)
+	{
+		printArraysDouble(KM->cluster_centroid, KM->k, KM->dim, "centroid of cluster", "cluster_centroid:");
+	}
+
+	if (cluster_assign)
+	{
+		printf("cluster_assign: \n");
+		printArrayInt(KM->cluster_assign, KM->ndata, "cluster of DP");
+	}
+
+	return;
 }

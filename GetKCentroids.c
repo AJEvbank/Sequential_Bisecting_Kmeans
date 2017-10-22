@@ -9,6 +9,10 @@ void GetKCentroids(struct kmeans * KM)
   {
       numClusters = Bisect(KM,SSEArray,numClusters,currentCluster);
       currentCluster = LargestSSE(SSEArray,numClusters);
+      if (BUILD_TERM1) {  printf("currentCluster = %d \n",currentCluster);
+                          printArrayDouble(SSEArray,KM->k,"SSE -> ","SSEArray: ");
+                          write_results_parallel((KM)->dim,(KM)->ndata,(KM)->data,(KM)->cluster_assign,(KM)->k,(KM)->cluster_centroid,0);
+                          displaySelectedFromKM(KM,1,1,1,1,1,1,1); exit(0); }
   }
   return;
 }
@@ -40,7 +44,7 @@ int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCl
         /* B. Recalculate Centroids */
 
         changed = RecalculateCentroidsAB(KM,A,B);
-
+        if (BUILD_TERM1) { printf("changed = %d \n",changed); displaySelectedFromKM(KM,0,0,1,0,0,1,0); }
   }
 
   /* 4. Calculate SSEs for both clusters. */
@@ -49,6 +53,8 @@ int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCl
 
   return numClusters + 1;
 }
+
+//void displaySelectedFromKM(struct kmeans * KM, int singleValues, int dataArray, int cluster_size, int cluster_start, int cluster_radius, int cluster_centroid, int cluster_assign);
 
 int LargestSSE(double * SSEArray, int numClusters)
 {
@@ -181,6 +187,7 @@ int RecalculateCentroidsAB(struct kmeans * KM, int A, int B)
     sumsAB[i] /= (KM->cluster_size)[A];
     sumsAB[j] /= (KM->cluster_size)[B];
   }
+  if (BUILD_TERM1) { printf("A = %d, B = %d \n",A,B); printArrayDouble(sumsAB,2 * KM->dim,"sumsAB -> ","sumsAB: "); }
   for (i = 0,j = KM->dim; i < KM->dim; i++,j++)
   {
     if ((KM->cluster_centroid)[A][i] != sumsAB[i])
@@ -188,11 +195,11 @@ int RecalculateCentroidsAB(struct kmeans * KM, int A, int B)
       changed = 1;
     }
     (KM->cluster_centroid)[A][i] = sumsAB[i];
-    if ((KM->cluster_centroid)[B][j] != sumsAB[j])
+    if ((KM->cluster_centroid)[B][i] != sumsAB[j])
     {
       changed = 1;
     }
-    (KM->cluster_centroid)[B][j] = sumsAB[j];
+    (KM->cluster_centroid)[B][i] = sumsAB[j];
   }
   return changed;
 }

@@ -21,6 +21,7 @@
 #define SEEDMULT 1
 
 #define BUILD_TERM 1
+#define BUILD_TERM1 0
 
 /* Data Structures */
 
@@ -103,9 +104,13 @@ void printDataArray(double * dataArray, int dim, int ndata);
 
 void writeResults(int dim, int ndata, double* data, int* cluster_assign);
 
+void write_results_parallel(int dim, int ndata, double *data, int *cluster_assign, int k, double **cluster_centroids, int world_rank);
+
 void printArrayDouble(double * ArrayDouble, int size, const char * text, const char * headingText);
 
 void printStack(struct stackBase *stack);
+
+void displaySelectedFromKM(struct kmeans * KM, int singleValues, int dataArray, int cluster_size, int cluster_start, int cluster_radius, int cluster_centroid, int cluster_assign);
 
 /* GetKCentroids.c */
 
