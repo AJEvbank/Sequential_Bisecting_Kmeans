@@ -15,9 +15,9 @@ int main(int argc, char** argv) {
 
 	double * dataArray = (double *)malloc(sizeof(double)*ndata*dim);
 	double * query = (double *)malloc(sizeof(double)*dim);
-	generateRandomArray(dataArray, ndata * dim, max_double, numSeeds, &seedArray[0]);
+	generateRandomArray(dataArray, ndata * dim, max_double, numSeeds, &seedArray[0],seedMult);
 	querySeed = seedMult;
-	generateRandomArray(query, dim, max_double,1, &querySeed);
+	generateRandomArray(query, dim, max_double,1, &querySeed,querySeed);
 	printf("Query Point: \n");
 	printArrayDoubles(query, 1, dim);
 

@@ -2,21 +2,20 @@
 
 void GetKCentroids(struct kmeans * KM)
 {
-  int Bigk = 1,currentCluster = 0;
+  int numClusters = 1,currentCluster = 0;
   double * SSEArray = allocateAndInitializeZeroDouble(KM->k);
-  SSEArray[currentCluster] = INFINITY;
   (KM->cluster_size)[currentCluster] = KM->ndata;
-  while (Bigk < KM->k)
+  while (numClusters < KM->k)
   {
-      Bigk = Bisect(KM,SSEArray,Bigk,currentCluster);
-      currentCluster = LargestSSE(SSEArray,Bigk);
+      numClusters = Bisect(KM,SSEArray,numClusters,currentCluster);
+      currentCluster = LargestSSE(SSEArray,numClusters);
   }
   return;
 }
 
-int Bisect(struct kmeans * KM, double * SSEArray, int Bigk, int currentCluster)
+int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCluster)
 {
-  int A = currentCluster, B = Bigk;
+  int A = currentCluster, B = numClusters;
 
   /* 1. Find first point. */
 
@@ -48,10 +47,10 @@ int Bisect(struct kmeans * KM, double * SSEArray, int Bigk, int currentCluster)
 
   CalculateSSE(KM,SSEArray,A,B);
 
-  return Bigk + 1;
+  return numClusters + 1;
 }
 
-int LargestSSE(double * SSEArray, int Bigk)
+int LargestSSE(double * SSEArray, int numClusters)
 {
   int i,currentCluster;
   double maxSSE = -INFINITY;

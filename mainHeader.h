@@ -69,7 +69,7 @@ void printArray(int * nums, int count);
 
 void printArrayDoubles(double * nums, int ndata, int dim);
 
-int generateRandomArray(double * dataArray, int subdomain, double max_double, int seeds, unsigned int * seedArray);
+void generateRandomArray(double * dataArray, int domain, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult);
 
 double bruteForceSearch(double * dataArray, double * query, int dim, int ndata, double * Bresult);
 
@@ -111,9 +111,9 @@ void printStack(struct stackBase *stack);
 
 void GetKCentroids(struct kmeans * KM);
 
-int Bisect(struct kmeans * KM, double * SSEArray, int Bigk, int currentCluster);
+int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCluster);
 
-int LargestSSE(double * SSEArray, int Bigk);
+int LargestSSE(double * SSEArray, int numClusters);
 
 int GetRandomInCluster(struct kmeans * KM, int currentCluster);
 

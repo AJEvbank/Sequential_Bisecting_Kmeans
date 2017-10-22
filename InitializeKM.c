@@ -56,7 +56,7 @@ void kmeans(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k)
 {
   initializeKM(KM,dim,ndata,dataArray,k);
   GetKCentroids(*KM);
-  if (BUILD_TERM) { printf("Terminate process \n"); exit(0); }
+  if (BUILD_TERM) { writeResults((*KM)->dim,(*KM)->ndata,(*KM)->data,(*KM)->cluster_assign); displayKM(*KM); printf("Terminate process \n"); exit(0); }
   ClusterizeKM(*KM);
   return;
 }
