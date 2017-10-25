@@ -1,0 +1,29 @@
+Values: dim = 10, ndata = 100000, k = 250, max_double = 800.000000, ndata = 100000, numSeeds = 4, seedMult = 987654321  
+
+Query Point: 
+457.369038 428.641474 106.180906 604.959408 668.692715 444.789463 114.359985 635.076545 744.843563 39.146085 
+
+->>>33767 points searched.
+
+Result stack data: 
+stackDepth = 1, distance to query point = 272.945649 
+
+BRUTE FORCE RESULT: 
+minimum distance = 272.945649 
+
+Search Result: 		 Brute Force Result: 
+646.573364 		 646.573364 
+526.863540 		 526.863540 
+103.572988 		 103.572988 
+516.241422 		 516.241422 
+642.846049 		 642.846049 
+323.245828 		 323.245828 
+158.770604 		 158.770604 
+614.729500 		 614.729500 
+794.482059 		 794.482059 
+68.888364 		 68.888364 
+In cluster 29 
+
+
+THE RESULT IS CORRECT. 
+

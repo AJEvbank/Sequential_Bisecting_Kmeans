@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 
 	getCmdArgs(argc, argv, &dim, &ndata, &k,&max_double,&seedMult);
 
-	printf("Values: dim = %d, ndata = %d, k = %d, max_double = %lf, ndata = %d numSeeds = %d, seedMult = %d  \n\n", dim, ndata, k, max_double, ndata, numSeeds,seedMult);
+	printf("Values: dim = %d, ndata = %d, k = %d, max_double = %lf, ndata = %d, numSeeds = %d, seedMult = %d  \n\n", dim, ndata, k, max_double, ndata, numSeeds,seedMult);
 
 	double * dataArray = (double *)malloc(sizeof(double)*ndata*dim);
 	double * query = (double *)malloc(sizeof(double)*dim);
@@ -45,23 +45,31 @@ printf("->>>%d points searched.\n",pointsSearched);
 
 	//Use brute force search to find the nearest point.
 
-	int isOneResult;
+	int isOneResult,i;
 	double * LocalBresult = (double *)malloc(sizeof(double)*(dim+1));
 
 	LocalBresult[0] = bruteForceSearch(dataArray, query, dim, ndata, LocalBresult);
 
 	struct stackNode * iterator = result->firstNode;
 	printf("\n");
-	printf("Print result stack from kmeans search function: \n");
-	printStack(result);
+	printf("Result stack data: \n");
+	printf("stackDepth = %d, distance to query point = %lf \n",result->stackDepth,result->firstNode->distance);
+	printf("\n");
 	printf("BRUTE FORCE RESULT: \n");
-	printArrayDoubles(&LocalBresult[1], dim, 1);
 	printf("minimum distance = %lf \n",LocalBresult[0]);
 	while (iterator != NULL)
 	{
 		isOneResult = checkResult(iterator->pointArray,&LocalBresult[1],dim);
 		if (isOneResult)
 		{
+			printf("\n");
+				printf("Search Result: \t\t Brute Force Result: \n");
+				for (i = 0; i < dim; i++)
+				{
+					printf("%lf \t\t %lf \n",(iterator->pointArray)[i],LocalBresult[i+1]);
+				}
+				printf("In cluster %d \n",iterator->cluster);
+				printf("\n");
 			break;
 		}
 		else
@@ -82,7 +90,7 @@ printf("->>>%d points searched.\n",pointsSearched);
 
 if (dim == 2)
 {
-	writeResults(dim,ndata, dataArray, KM->cluster_assign);
+	write_results_parallel((KM)->dim,(KM)->ndata,(KM)->data,(KM)->cluster_assign,(KM)->k,(KM)->cluster_centroid,0);
 }
 
 

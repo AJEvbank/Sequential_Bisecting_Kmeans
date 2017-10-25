@@ -2,17 +2,19 @@
 
 void GetKCentroids(struct kmeans * KM)
 {
-  int numClusters = 1,currentCluster = 0;
+  int numClusters = 1,currentCluster = 0,loopCounter = 0;
   double * SSEArray = allocateAndInitializeZeroDouble(KM->k);
   (KM->cluster_size)[currentCluster] = KM->ndata;
   while (numClusters < KM->k)
   {
       numClusters = Bisect(KM,SSEArray,numClusters,currentCluster);
       currentCluster = LargestSSE(SSEArray,numClusters);
-      if (BUILD_TERM1) {  printf("currentCluster = %d \n",currentCluster);
+      if (BUILD_TERM1 && loopCounter == 2) {  printf("currentCluster = %d \n",currentCluster);
                           printArrayDouble(SSEArray,KM->k,"SSE -> ","SSEArray: ");
                           write_results_parallel((KM)->dim,(KM)->ndata,(KM)->data,(KM)->cluster_assign,(KM)->k,(KM)->cluster_centroid,0);
                           displaySelectedFromKM(KM,1,1,1,1,1,1,1); exit(0); }
+      if (BUILD_TERM2) { printArrayDouble(SSEArray,KM->k,"SSE -> ","SSEArray: "); }
+      loopCounter++;
   }
   return;
 }
@@ -30,7 +32,10 @@ int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCl
   int secondPoint = GetFurthestPointInCluster(KM,firstPoint,currentCluster);
   setCentroid(KM,A,firstPoint);
   setCentroid(KM,B,secondPoint);
-
+  if (BUILD_TERM3) {  printf("currentCluster = %d \n",currentCluster);
+                      printArrayDouble(SSEArray,KM->k,"SSE -> ","SSEArray: ");
+                      write_results_parallel((KM)->dim,(KM)->ndata,(KM)->data,(KM)->cluster_assign,(KM)->k,(KM)->cluster_centroid,0);
+                      displaySelectedFromKM(KM,1,1,1,1,1,1,1); exit(0); }
   /* 3. Iterate while no changes: */
 
   int changed = 1;
@@ -44,7 +49,6 @@ int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCl
         /* B. Recalculate Centroids */
 
         changed = RecalculateCentroidsAB(KM,A,B);
-        if (BUILD_TERM1) { printf("changed = %d \n",changed); displaySelectedFromKM(KM,0,0,1,0,0,1,0); }
   }
 
   /* 4. Calculate SSEs for both clusters. */
@@ -100,6 +104,7 @@ int GetFurthestPointInCluster(struct kmeans * KM, int firstPoint, int currentClu
     {
       first_index_Point = i * KM->dim;
       distance = GetDistance2Points(KM,first_index_Point,first_index_firstPoint);
+      if (BUILD_TERM4) { printf("first_index_Point = %d, first_index_firstPoint = %d, distance = %lf \n",first_index_Point,first_index_firstPoint,distance); }
       if (distance > maxDist)
       {
         maxDist = distance;
@@ -162,7 +167,7 @@ void AssignDPsAB(struct kmeans * KM, int A, int B)
 int RecalculateCentroidsAB(struct kmeans * KM, int A, int B)
 {
   int changed = 0,i,j,first_index;
-  double * sumsAB = allocateAndInitializeZeroDouble((sizeof(double) * KM->dim)*2);
+  double * sumsAB = allocateAndInitializeZeroDouble(KM->dim*2);
   for (i = 0; i < KM->ndata; i++)
   {
     if ((KM->cluster_assign)[i] == A)
@@ -187,7 +192,6 @@ int RecalculateCentroidsAB(struct kmeans * KM, int A, int B)
     sumsAB[i] /= (KM->cluster_size)[A];
     sumsAB[j] /= (KM->cluster_size)[B];
   }
-  if (BUILD_TERM1) { printf("A = %d, B = %d \n",A,B); printArrayDouble(sumsAB,2 * KM->dim,"sumsAB -> ","sumsAB: "); }
   for (i = 0,j = KM->dim; i < KM->dim; i++,j++)
   {
     if ((KM->cluster_centroid)[A][i] != sumsAB[i])

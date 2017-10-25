@@ -20,8 +20,11 @@
 #define QSEED 30
 #define SEEDMULT 1
 
-#define BUILD_TERM 1
+#define BUILD_TERM 0
 #define BUILD_TERM1 0
+#define BUILD_TERM2 0
+#define BUILD_TERM3 0
+#define BUILD_TERM4 0
 
 /* Data Structures */
 
@@ -91,6 +94,8 @@ double * allocateAndInitializeZeroDouble(int size_of_target);
 void kmeans(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k);
 
 /* debugging displays - DEBUG.c */
+
+#define SHOW_DP_NUMBER 1
 
 void displayKM(struct kmeans * KM);
 
