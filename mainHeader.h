@@ -25,6 +25,7 @@
 #define BUILD_TERM2 0
 #define BUILD_TERM3 0
 #define BUILD_TERM4 0
+#define KM_DISPLAY 0
 
 /* Data Structures */
 

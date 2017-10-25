@@ -29,6 +29,7 @@ struct kmeans * KM = NULL;
 
 kmeans(&KM,dim,ndata,dataArray,k);
 
+if (KM_DISPLAY) { displaySelectedFromKM(KM,1,1,1,0,1,1,1); }
 
 //The search can now be run.
 /*******************************************************************************************************************/
