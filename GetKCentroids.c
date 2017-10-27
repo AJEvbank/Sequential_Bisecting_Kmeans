@@ -2,25 +2,23 @@
 
 void GetKCentroids(struct kmeans * KM)
 {
-  int numClusters = 1,currentCluster = 0,loopCounter = 0;
+  int numClusters = 1,currentCluster = 0;
   double * SSEArray = allocateAndInitializeZeroDouble(KM->k);
   (KM->cluster_size)[currentCluster] = KM->ndata;
   while (numClusters < KM->k)
   {
+      if (WP3) { printf("\n"); printf("currentCluster = %d, size = %d \n",currentCluster,(KM->cluster_size)[currentCluster]); displayKM(KM,"Before Bisect: "); }
       numClusters = Bisect(KM,SSEArray,numClusters,currentCluster);
-      currentCluster = LargestSSE(SSEArray,numClusters);
-      if (BUILD_TERM1 && loopCounter == 2) {  printf("currentCluster = %d \n",currentCluster);
-                          printArrayDouble(SSEArray,KM->k,"SSE -> ","SSEArray: ");
-                          write_results_parallel((KM)->dim,(KM)->ndata,(KM)->data,(KM)->cluster_assign,(KM)->k,(KM)->cluster_centroid,0);
-                          displaySelectedFromKM(KM,1,1,1,1,1,1,1); exit(0); }
-      if (BUILD_TERM2) { printArrayDouble(SSEArray,KM->k,"SSE -> ","SSEArray: "); }
-      loopCounter++;
+      if (WP1) { displayKM(KM,"After Bisect: "); }
+      currentCluster = LargestSSE(KM,SSEArray,numClusters);
+      if (WP2) { printf("currentCluster = %d \n",currentCluster); printArrayDouble(SSEArray,(KM->k),"SSE -> ","SSEArray: "); printf("\n"); }
   }
   return;
 }
 
 int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCluster)
 {
+
   int A = currentCluster, B = numClusters;
 
   /* 1. Find first point. */
@@ -30,12 +28,11 @@ int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCl
   /* 2. Find second point. */
 
   int secondPoint = GetFurthestPointInCluster(KM,firstPoint,currentCluster);
+
   setCentroid(KM,A,firstPoint);
+
   setCentroid(KM,B,secondPoint);
-  if (BUILD_TERM3) {  printf("currentCluster = %d \n",currentCluster);
-                      printArrayDouble(SSEArray,KM->k,"SSE -> ","SSEArray: ");
-                      write_results_parallel((KM)->dim,(KM)->ndata,(KM)->data,(KM)->cluster_assign,(KM)->k,(KM)->cluster_centroid,0);
-                      displaySelectedFromKM(KM,1,1,1,1,1,1,1); exit(0); }
+
   /* 3. Iterate while no changes: */
 
   int changed = 1;
@@ -49,6 +46,7 @@ int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCl
         /* B. Recalculate Centroids */
 
         changed = RecalculateCentroidsAB(KM,A,B);
+
   }
 
   /* 4. Calculate SSEs for both clusters. */
@@ -60,13 +58,13 @@ int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCl
 
 //void displaySelectedFromKM(struct kmeans * KM, int singleValues, int dataArray, int cluster_size, int cluster_start, int cluster_radius, int cluster_centroid, int cluster_assign);
 
-int LargestSSE(double * SSEArray, int numClusters)
+int LargestSSE(struct kmeans * KM, double * SSEArray, int numClusters)
 {
   int i,currentCluster;
   double maxSSE = -INFINITY;
-  for (i = 0; i < K; i++)
+  for (i = 0; i < numClusters; i++)
   {
-    if (SSEArray[i] > maxSSE)
+    if (SSEArray[i] > maxSSE && (KM->cluster_size)[i] > 1)
     {
       maxSSE = SSEArray[i];
       currentCluster = i;
@@ -104,7 +102,6 @@ int GetFurthestPointInCluster(struct kmeans * KM, int firstPoint, int currentClu
     {
       first_index_Point = i * KM->dim;
       distance = GetDistance2Points(KM,first_index_Point,first_index_firstPoint);
-      if (BUILD_TERM4) { printf("first_index_Point = %d, first_index_firstPoint = %d, distance = %lf \n",first_index_Point,first_index_firstPoint,distance); }
       if (distance > maxDist)
       {
         maxDist = distance;
@@ -167,7 +164,7 @@ void AssignDPsAB(struct kmeans * KM, int A, int B)
 int RecalculateCentroidsAB(struct kmeans * KM, int A, int B)
 {
   int changed = 0,i,j,first_index;
-  double * sumsAB = allocateAndInitializeZeroDouble(KM->dim*2);
+  double * sumsAB = allocateAndInitializeZeroDouble((KM->dim)*2);
   for (i = 0; i < KM->ndata; i++)
   {
     if ((KM->cluster_assign)[i] == A)
@@ -205,15 +202,14 @@ int RecalculateCentroidsAB(struct kmeans * KM, int A, int B)
     }
     (KM->cluster_centroid)[B][i] = sumsAB[j];
   }
+  free(sumsAB);
   return changed;
 }
 
 void CalculateSSE(struct kmeans * KM, double * SSEArray, int A, int B)
 {
-  //double distance;
-  double * meanDistAB = (double *)malloc(sizeof(double) * 2);
-  double * distancesA = (double *)malloc(sizeof(double) * (KM->cluster_size)[A]);
-  double * distancesB = (double *)malloc(sizeof(double) * (KM->cluster_size)[B]);
+  double * distancesA = allocateAndInitializeZeroDouble((KM->cluster_size)[A]);
+  double * distancesB = allocateAndInitializeZeroDouble((KM->cluster_size)[B]);
   int i,first_index,stepA = -1,stepB = -1;
   for ( i = 0; i < KM->ndata; i++)
   {
@@ -222,33 +218,38 @@ void CalculateSSE(struct kmeans * KM, double * SSEArray, int A, int B)
       stepA++;
       first_index = i * KM->dim;
       distancesA[stepA] = GetDistance2PointsDC(KM,first_index,A);
-      meanDistAB[0] += distancesA[stepA];
     }
     else if ((KM->cluster_assign)[i] == B)
     {
       stepB++;
       first_index = i * KM->dim;
       distancesB[stepB] = GetDistance2PointsDC(KM,first_index,B);
-      meanDistAB[1] += distancesB[stepB];
     }
   }
 
-  meanDistAB[0] /= (KM->cluster_size)[A];
-  meanDistAB[1] /= (KM->cluster_size)[B];
+  if (WP4) { printf("\n");
+             displayKM(KM,"Before CalculateSSE: ");
+             printArrayDouble(distancesA,(KM->cluster_size)[A],"distancesA -> ","distancesA: ");
+             printArrayDouble(distancesB,(KM->cluster_size)[B],"distancesB -> ","distancesB: "); }
 
-  SSEArray[A] = Sigma(distancesA,(KM->cluster_size)[A],meanDistAB[0]);
-  SSEArray[B] = Sigma(distancesB,(KM->cluster_size)[B],meanDistAB[1]);
+  SSEArray[A] = Sigma(distancesA,(KM->cluster_size)[A]);
+  SSEArray[B] = Sigma(distancesB,(KM->cluster_size)[B]);
 
+  if (WP4) { printf("\n");
+             printArrayDouble(SSEArray,(KM->k),"SSE -> ","SSEArray: "); }
+
+  free(distancesA);
+  free(distancesB);
   return;
 }
 
-double Sigma(double * distances, int size, double meanDist)
+double Sigma(double * distances, int size)
 {
-  double SSE;
+  double SSE = 0;
   int i;
   for (i = 0; i < size; i++)
   {
-    SSE += pow( fabs(distances[i] - meanDist), 2);
+    SSE += pow( fabs(distances[i]), 2);
   }
   return SSE;
 }

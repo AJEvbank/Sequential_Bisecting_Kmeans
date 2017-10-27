@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 
 struct kmeans * KM = NULL;
 
-kmeans(&KM,dim,ndata,dataArray,k);
+bkm(&KM,dim,ndata,dataArray,k);
 
 if (KM_DISPLAY) { displaySelectedFromKM(KM,1,1,1,0,1,1,1); }
 

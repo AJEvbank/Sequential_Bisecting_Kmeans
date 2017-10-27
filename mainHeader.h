@@ -20,12 +20,16 @@
 #define QSEED 30
 #define SEEDMULT 1
 
-#define BUILD_TERM 0
-#define BUILD_TERM1 0
-#define BUILD_TERM2 0
-#define BUILD_TERM3 0
-#define BUILD_TERM4 0
-#define KM_DISPLAY 0
+#define KM_DISPLAY 1
+#define WP1 1
+#define WP2 1
+#define WP3 1
+
+#define WP4 1
+#define WP5 1
+
+#define EXIT 0
+
 
 /* Data Structures */
 
@@ -92,13 +96,13 @@ double ** allocateAndInitializeZeroDoubleMulti(int k, int dimension);
 
 double * allocateAndInitializeZeroDouble(int size_of_target);
 
-void kmeans(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k);
+void bkm(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k);
 
 /* debugging displays - DEBUG.c */
 
 #define SHOW_DP_NUMBER 1
 
-void displayKM(struct kmeans * KM);
+void displayKM(struct kmeans * KM,const char * displayText);
 
 void printArrayInt(int * ArrayInt, int size, const char * text);
 
@@ -124,7 +128,7 @@ void GetKCentroids(struct kmeans * KM);
 
 int Bisect(struct kmeans * KM, double * SSEArray, int numClusters, int currentCluster);
 
-int LargestSSE(double * SSEArray, int numClusters);
+int LargestSSE(struct kmeans * KM, double * SSEArray, int numClusters);
 
 int GetRandomInCluster(struct kmeans * KM, int currentCluster);
 
@@ -140,7 +144,8 @@ int RecalculateCentroidsAB(struct kmeans * KM, int A, int B);
 
 void CalculateSSE(struct kmeans * KM, double * SSEArray, int A, int B);
 
-double Sigma(double * distances, int size, double meanDist);
+double Sigma(double * distances, int size);
+
 
 
 

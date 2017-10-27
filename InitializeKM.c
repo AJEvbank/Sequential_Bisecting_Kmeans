@@ -52,13 +52,10 @@ double * allocateAndInitializeZeroDouble(int size_of_target)
 	return target;
 }
 
-void kmeans(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k)
+void bkm(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k)
 {
-  initializeKM(KM,dim,ndata,dataArray,k);
+  initializeKM(KM,dim,ndata,dataArray,k);\
   GetKCentroids(*KM);
-  if (BUILD_TERM) { write_results_parallel((*KM)->dim,(*KM)->ndata,(*KM)->data,(*KM)->cluster_assign,(*KM)->k,(*KM)->cluster_centroid,0);
-                    displaySelectedFromKM(*KM,1,0,1,1,1,1,1);
-                    printf("Terminate process \n"); exit(0); }
   ClusterizeKM(*KM);
   return;
 }

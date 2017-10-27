@@ -1,0 +1,17 @@
+if (BUILD_TERM1 && loopCounter == 2) {  printf("currentCluster = %d \n",currentCluster);
+                    printArrayDouble(SSEArray,KM->k,"SSE -> ","SSEArray: ");
+                    write_results_parallel((KM)->dim,(KM)->ndata,(KM)->data,(KM)->cluster_assign,(KM)->k,(KM)->cluster_centroid,0);
+                    displaySelectedFromKM(KM,1,1,1,1,1,1,1); exit(0); }
+if (BUILD_TERM2) { printArrayDouble(SSEArray,KM->k,"SSE -> ","SSEArray: "); }
+
+if (BUILD_TERM3) {  printf("currentCluster = %d \n",currentCluster);
+                    printArrayDouble(SSEArray,KM->k,"SSE -> ","SSEArray: ");
+                    write_results_parallel((KM)->dim,(KM)->ndata,(KM)->data,(KM)->cluster_assign,(KM)->k,(KM)->cluster_centroid,0);
+                    displaySelectedFromKM(KM,1,1,1,1,1,1,1); exit(0); }
+
+
+if (BUILD_TERM4) { printf("first_index_Point = %d, first_index_firstPoint = %d, distance = %lf \n",first_index_Point,first_index_firstPoint,distance); }
+
+if (BUILD_TERM) { write_results_parallel((*KM)->dim,(*KM)->ndata,(*KM)->data,(*KM)->cluster_assign,(*KM)->k,(*KM)->cluster_centroid,0);
+                  displaySelectedFromKM(*KM,1,0,1,1,1,1,1);
+                  printf("Terminate process \n"); exit(0); }

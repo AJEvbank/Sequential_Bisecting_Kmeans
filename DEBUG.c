@@ -1,8 +1,8 @@
 #include "mainHeader.h"
 
-void displayKM(struct kmeans * KM)
+void displayKM(struct kmeans * KM,const char * displayText)
 {
-	printf("Kmeans: \n");
+	printf("%s: \n",displayText);
 	printf("dim = %d, ndata = %d, k = %d \n", KM->dim, KM->ndata, KM->k);
 
 	printf("Working data array: \n");
