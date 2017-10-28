@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <unistd.h>
+#include "getopt.h"
 #include "math.h"
 
 
@@ -20,13 +22,13 @@
 #define QSEED 30
 #define SEEDMULT 1
 
-#define KM_DISPLAY 1
-#define WP1 1
-#define WP2 1
-#define WP3 1
+#define KM_DISPLAY 0
+#define WP1 0
+#define WP2 0
+#define WP3 0
 
-#define WP4 1
-#define WP5 1
+#define WP4 0
+#define WP5 0
 
 #define EXIT 0
 
@@ -69,6 +71,8 @@ struct stackNode {
 };
 
 /* Prototypes */
+
+void getCmdArgsWithOptions(int argc, char ** argv, int * dim, int * ndata, int * k, double * max_double,int * seedMult, const char *shortopts, const struct option *longopts, int *indexptr);
 
 void getCmdArgs(int argc, char ** argv, int * dim, int * ndata, int * k, double * max_double, int * seedMult);
 
