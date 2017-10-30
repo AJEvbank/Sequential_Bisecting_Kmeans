@@ -30,8 +30,6 @@ struct kmeans * KM = NULL;
 
 bkm(&KM,dim,ndata,dataArray,k);
 
-if (KM_DISPLAY) { displaySelectedFromKM(KM,1,1,1,0,1,1,1); }
-
 //The search can now be run.
 /*******************************************************************************************************************/
 
@@ -42,15 +40,13 @@ printf("->>>%d points searched.\n",pointsSearched);
 
 /**********************************************************************************************************************************/
 
-
-
-
 	//Use brute force search to find the nearest point.
 
 	int isOneResult,i;
-	double * LocalBresult = (double *)malloc(sizeof(double)*(dim+1));
+	double * bruteForceResult = (double *)malloc(sizeof(double)*(dim+1));
 
-	LocalBresult[0] = bruteForceSearch(dataArray, query, dim, ndata, LocalBresult);
+	// Returns the distance to the nearest data point and sets bruteForceResult[1..dim+1] to the nearest point.
+	bruteForceResult[0] = bruteForceSearch(dataArray, query, dim, ndata, bruteForceResult);
 
 	struct stackNode * iterator = result->firstNode;
 	printf("\n");
@@ -58,17 +54,17 @@ printf("->>>%d points searched.\n",pointsSearched);
 	printf("stackDepth = %d, distance to query point = %lf \n",result->stackDepth,result->firstNode->distance);
 	printf("\n");
 	printf("BRUTE FORCE RESULT: \n");
-	printf("minimum distance = %lf \n",LocalBresult[0]);
+	printf("minimum distance = %lf \n",bruteForceResult[0]);
 	while (iterator != NULL)
 	{
-		isOneResult = checkResult(iterator->pointArray,&LocalBresult[1],dim);
-		if (isOneResult)
+		isOneResult = checkResult(iterator->pointArray,&bruteForceResult[1],dim);
+		if (isOneResult) // If a match from the result stack is found, display it alongside the brute force result.
 		{
 			printf("\n");
 				printf("Search Result: \t\t Brute Force Result: \n");
 				for (i = 0; i < dim; i++)
 				{
-					printf("%lf \t\t %lf \n",(iterator->pointArray)[i],LocalBresult[i+1]);
+					printf("%lf \t\t %lf \n",(iterator->pointArray)[i],bruteForceResult[i+1]);
 				}
 				printf("In cluster %d \n",iterator->cluster);
 				printf("\n");
@@ -98,8 +94,8 @@ if (dim == 2)
 
 	clearStack(result);
 	free(result);
-	free(LocalBresult);
+	free(bruteForceResult);
 	free(dataArray);
 	free(query);
-	//MPI_Finalize();
+	free(KM);
 }

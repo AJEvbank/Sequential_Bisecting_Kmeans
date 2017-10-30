@@ -22,17 +22,6 @@
 #define QSEED 30
 #define SEEDMULT 1
 
-#define KM_DISPLAY 0
-#define WP1 0
-#define WP2 0
-#define WP3 0
-
-#define WP4 0
-#define WP5 0
-
-#define EXIT 0
-
-
 /* Data Structures */
 
 enum isNumStates {
@@ -74,8 +63,6 @@ struct stackNode {
 
 void getCmdArgsWithOptions(int argc, char ** argv, int * dim, int * ndata, int * k, double * max_double,int * seedMult);
 
-void getCmdArgs(int argc, char ** argv, int * dim, int * ndata, int * k, double * max_double, int * seedMult);
-
 int isNumber(const char * str);
 
 void printArray(int * nums, int count);
@@ -88,8 +75,6 @@ double bruteForceSearch(double * dataArray, double * query, int dim, int ndata, 
 
 int checkResult(double * searchResult, double * bruteResult, int dim);
 
-void setSeedArray(unsigned int * seedArray, int seedMult);
-
 /* initialize the kmeans structure */
 
 void initializeKM(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k);
@@ -101,6 +86,8 @@ double ** allocateAndInitializeZeroDoubleMulti(int k, int dimension);
 double * allocateAndInitializeZeroDouble(int size_of_target);
 
 void bkm(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k);
+
+void destroyKM(struct kmeans * KM);
 
 /* debugging displays - DEBUG.c */
 
@@ -149,11 +136,6 @@ int RecalculateCentroidsAB(struct kmeans * KM, int A, int B);
 void CalculateSSE(struct kmeans * KM, double * SSEArray, int A, int B);
 
 double Sigma(double * distances, int size);
-
-
-
-
-int GetNextCluster(struct kmeans * KM, int numClusters);
 
 double GetDistance2PointsDC(struct kmeans *KM, int first_index, int centroid);
 

@@ -13,7 +13,6 @@ void initializeKM(struct kmeans ** KM, int dim, int ndata, double * dataArray, i
   (*KM)->cluster_radius = allocateAndInitializeZeroDouble(k);
   (*KM)->cluster_assign = allocateAndInitializeZeroInt(ndata);
   (*KM)->cluster_centroid = allocateAndInitializeZeroDoubleMulti(k,dim);
-  //(*KM)->cluster_group = allocateAndInitializeZeroInt(ndata);
   return;
 }
 
@@ -54,8 +53,27 @@ double * allocateAndInitializeZeroDouble(int size_of_target)
 
 void bkm(struct kmeans ** KM, int dim, int ndata, double * dataArray, int k)
 {
-  initializeKM(KM,dim,ndata,dataArray,k);\
+  // Initialize the kmeans structure.
+  initializeKM(KM,dim,ndata,dataArray,k);
+  // Get initial k centroids.
   GetKCentroids(*KM);
+  // Generate clusters in the kmeans structure.
   ClusterizeKM(*KM);
+  return;
+}
+
+void destroyKM(struct kmeans * KM)
+{
+  int i;
+  for (i = 0; i < KM->k; i++)
+  {
+    free((KM->cluster_centroid)[i]);
+  }
+  free(KM->cluster_centroid);
+  free(KM->cluster_assign);
+  free(KM->cluster_radius);
+  free(KM->cluster_start);
+  free(KM->cluster_size);
+  free(KM);
   return;
 }

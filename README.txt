@@ -5,13 +5,17 @@ Installation: Use the make file to compile the program.
 Running: To run type ./source .
 
 Command Line Arguments:
-1: dim, default dim = 128
-2: ndata, default ndata = 10000 (should be divisible by 4)
-3: maximum size of data point values, default max_double = 1000.00
-4: number of clusters, default k = 128 *
-5: seed multiplier (any positive non-zero integer), default seedMult = 1
-   //This is a multiplier for the seed array { 2, 4, 8, 16 } and it is the
-   //seed for the query point.
+--dim: number of dimensions, must be integer greater than 0 (default dim = 128)
+--ndata: number of data points, must be integer greater than 0 and divisible by
+         4 (default ndata = 10000)
+--max: maximum size of double in all data points, must be floating point number
+       greater than 0 (default max = 1000.00)
+--k: number of clusters, must be integer greater than 0 (default k = 128)
+--seed: seed multiplier must be integer greater than 0 (default seed = 1)
+
+Note: The seed multiplier is applied to the array { 2, 4, 8, 16 } when data
+points are being generated and to the query seed (666) when the query is being
+generated. This is to allow more flexibility during testing of the program.
 
 Note: Command line arguments cannot be skipped.
 
@@ -28,6 +32,3 @@ of the search results, then the program will print, "THE RESULT IS CORRECT".
 If the point is not one of the search results, then the program will print,
 "THE RESULT IS NOT CORRECT". The program will also output the number of points
 checked by the kmeans search algorithm.
-
-* - This value must be divisible by four in the parallelized version, but in
-this version it is not necessary for it to be divisible by four.

@@ -50,9 +50,9 @@ void getCmdArgsWithOptions(int argc, char ** argv, int * dim, int * ndata, int *
 							}
 							break;
 			case 'k':
-							if (isNumber(argv[4]))
+							if (isNumber(optarg))
 							{
-								*k = (int)atof(argv[4]);
+								*k = (int)atof(optarg);
 							}
 							if (*k <= 0)
 							{
@@ -82,88 +82,6 @@ void getCmdArgsWithOptions(int argc, char ** argv, int * dim, int * ndata, int *
 			default:
 							break;
 		}
-
-
-	}
-	return;
-}
-
-void getCmdArgs(int argc, char ** argv, int * dim, int * ndata, int * k, double * max_double,int * seedMult)
-{
-	if (argc >= 2)
-	{
-		if (isNumber(argv[1]))
-		{
-			*dim = (int)atof(argv[1]);
-		}
-		if (*dim <= 0)
-		{
-			*dim = DIM;
-		}
-	}
-	else
-	{
-		*dim = DIM;
-	}
-	if (argc >= 3)
-	{
-		if (isNumber(argv[2]))
-		{
-			*ndata = (int)atof(argv[2]);
-		}
-		if (*ndata <= 0)
-		{
-			*ndata = NDATA;
-		}
-	}
-	else
-	{
-		*ndata = NDATA;
-	}
-	if (argc >= 4)
-	{
-		if (isNumber(argv[3]))
-		{
-			*max_double = atof(argv[3]);
-		}
-		if (*max_double <= 0)
-		{
-			*max_double = MAX_DOUBLE;
-		}
-	}
-	else
-	{
-		*max_double = MAX_DOUBLE;
-	}
-	if (argc >= 5)
-	{
-		if (isNumber(argv[4]))
-		{
-			*k = (int)atof(argv[4]);
-		}
-		if (*k <= 0)
-		{
-			*k = K;
-		}
-	}
-	else
-	{
-		*k = K;
-	}
-	if (argc >= 6)
-	{
-		if (isNumber(argv[5]))
-		{
-			*seedMult = (int)atof(argv[5]);
-		}
-		if (*seedMult <= 0)
-		{
-			*seedMult = SEEDMULT;
-		}
-	}
-	else
-	{
-		*seedMult = SEEDMULT;
 	}
 	return;
 }
@@ -277,7 +195,14 @@ int isNumber(const char * str)
 
 			}
 		}
-		return 1;
+		if (state == ERROR)
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
 	}
 	else
 	{
@@ -301,10 +226,14 @@ void generateRandomArray(double * dataArray, int domain, double max_double, int 
 	return;
 }
 
-double bruteForceSearch(double * dataArray, double * query, int dim, int ndata, double * Bresult)
+double bruteForceSearch(double * dataArray, double * query, int dim, int ndata, double * bruteForceResult)
 {
 	int first_index, i, j, nearestPoint;
 	double minDist = INFINITY, calcDist = 0;
+
+
+	// For each data point, calculate the distance to the query point and compare it to the current
+	// minimum distance and see if it is the new current nearest point.
 	for (i = 0; i < ndata; i++)
 	{
 		calcDist = 0;
@@ -320,37 +249,29 @@ double bruteForceSearch(double * dataArray, double * query, int dim, int ndata, 
 			nearestPoint = i;
 		}
 	}
+
+	// Set the brute force result array with the values of the nearest point.
 	first_index = nearestPoint * dim;
 	for (i = 0; i < dim; i++)
 	{
-		Bresult[i+1] = dataArray[(first_index) + i];
+		bruteForceResult[i+1] = dataArray[(first_index) + i];
 	}
-	return minDist;
+	return minDist; //Return the distance to the nearest point.
 }
 
-int checkResult(double * searchResult, double * bruteResult, int dim)
+int checkResult(double * pointA, double * pointB, int dim)
+// Test whether two points are the same.
 {
 	int i;
 	for (i = 0; i < dim; i++)
 	{
-		if(searchResult[i] != bruteResult[i])
+		if(pointA[i] != pointB[i])
 		{
 			return 0;
 		}
 	}
 	return 1;
 }
-
-void setSeedArray(unsigned int * seedArray, int seedMult)
-{
-	int i;
-	for (i = 0; i < 4; i++)
-	{
-		seedArray[i] = seedArray[i] * seedMult;
-	}
-	return;
-}
-
 
 
 #endif
