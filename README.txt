@@ -4,7 +4,7 @@ Installation: Use the make file to compile the program.
 
 Running: To run type ./source .
 
-Command Line Arguments:
+Command Line Options:
 --dim: number of dimensions, must be integer greater than 0 (default dim = 128)
 --ndata: number of data points, must be integer greater than 0 and divisible by
          4 (default ndata = 10000)

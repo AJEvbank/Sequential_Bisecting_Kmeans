@@ -15,7 +15,7 @@ void ClusterizeKM(struct kmeans * KM)
 
   changed = RecalculateCentroids(KM);
 
-  /* Repeat the iteration until cluster assignments do not change or threshold is reached. */
+  /* Repeat the iteration until cluster assignments do not change. */
   }
 
   SaveClusters(KM);
@@ -27,20 +27,24 @@ void AssignDPs(struct kmeans * KM)
 {
   int i,j,first_index,assignment;
   double distance = 0, minDist;
+  // Iterate the data set.
   for (i = 0; i < (KM->ndata); i++)
   {
+    // Calculate the distance to each centroid.
     first_index = i * (KM->dim);
     minDist = INFINITY;
     for (j = 0; j < (KM->k); j++)
     {
       distance = GetDistance2PointsDC(KM, first_index, j);
-      //if (DEBUG_ASSIGN) printf("distance between %d and Centroid %d = %lf \n",i,j,distance);
+      // If the distance is less than the minimum distance to a centroid,
+      // make that cluster the current assignment.
       if (distance < minDist)
       {
         minDist = distance;
         assignment = j;
       }
     }
+    // Assign the data point to the selected cluster.
     (KM->cluster_assign)[i] = assignment;
   }
 
@@ -53,7 +57,7 @@ int RecalculateCentroids(struct kmeans * KM)
   double * centroids = allocateAndInitializeZeroDouble(KM->k * KM->dim);
   int i,j,group,group_coordinate,first_index,changed = 0;
 
-  /* Get the sum of each dimension in each cluster */
+  /* Get the sums of each dimension in each cluster */
   for ( i = 0; i < KM->ndata; i++)
   {
     group = (KM->cluster_assign)[i];
@@ -142,18 +146,24 @@ void CalculateRadii(struct kmeans * KM)
   double * MaxRadii = allocateAndInitializeZeroDouble(KM->k);
   int i,j,start;
   double distance = 0;
+  // Iterate over each cluster.
   for (i = 0; i < (KM->k); i++)
   {
+    // Iterate over the data points in the cluster.
     for (j = 0; j < (KM->cluster_size)[i]; j++)
     {
+      // Calculate the distance for each data point.
       start = (KM->cluster_start)[i];
       distance = GetDistance2PointsDC(KM,(start + j)*KM->dim,i);
+      // If the distance is greater than the current max, set the current distance
+      // as the max.
       if (distance > MaxRadii[i])
       {
         MaxRadii[i] = distance;
       }
     }
   }
+  // Set the cluster radii with the calculated maximum radii.
   for (i = 0; i < (KM->k); i++)
   {
     (KM->cluster_radius)[i] = MaxRadii[i];
@@ -166,19 +176,15 @@ void EmptyClusters(struct kmeans * KM)
 {
   double * ClusterSizeCheck = (double *)malloc(sizeof(double) * KM->k);
   int i,limit = KM->k;
-  for (i = 0; i < KM->k; i++)
-  {
-    ClusterSizeCheck[i] = (KM->cluster_size)[i];
-  }
 
-  for (i = 0; i < limit; i++)
+  // Iterate over the cluster size array in reverse order.
+  for (i = limit; i > -1; i--)
   {
+    // If a cluster is empty, delete it.
     if((KM->cluster_size)[i] == 0)
     {
       DeleteEmptyCluster(KM,i);
-      i--;
     }
-    limit = KM->k;
   }
   free(ClusterSizeCheck);
   return;
@@ -192,6 +198,15 @@ void DeleteEmptyCluster(struct kmeans * KM, int cluster)
   free((KM->cluster_centroid)[cluster]);
   (KM->cluster_centroid)[cluster] = NULL;
 
+  /* Adjust the cluster assignment indices. */
+  for (i = (KM->cluster_start)[cluster]; i < (KM->ndata); i++)
+  {
+    if ((KM->cluster_assign)[i] >= cluster)
+    {
+      (KM->cluster_assign)[i] = (KM->cluster_assign)[i] + 1;
+    }
+  }
+
   /* Shift back size, radius, start, and centroid. */
   for (i = cluster; i < limit-1; i++)
   {
@@ -199,12 +214,6 @@ void DeleteEmptyCluster(struct kmeans * KM, int cluster)
     (KM->cluster_radius)[i] = (KM->cluster_radius)[i+1];
     (KM->cluster_start)[i] = (KM->cluster_start)[i+1];
     (KM->cluster_centroid)[i] = (KM->cluster_centroid)[i+1];
-  }
-
-  /* Adjust the cluster assignment indices. */
-  for (i = limit; i < limit; i++)
-  {
-    (KM->cluster_assign)[i] = (KM->cluster_assign)[i] - 1;
   }
 
   /* Decrement k. */
