@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
 	int seedMult,numSeeds = 4;
 
 
-	getCmdArgs(argc, argv, &dim, &ndata, &k,&max_double,&seedMult);
+	getCmdArgsWithOptions(argc, argv, &dim, &ndata, &k,&max_double,&seedMult);
 
 	printf("\n");
 	printf("Values: dim = %d, ndata = %d, k = %d, max_double = %lf, ndata = %d, numSeeds = %d, seedMult = %d  \n\n", dim, ndata, k, max_double, ndata, numSeeds,seedMult);

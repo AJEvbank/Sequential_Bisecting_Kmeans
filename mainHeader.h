@@ -72,7 +72,7 @@ struct stackNode {
 
 /* Prototypes */
 
-void getCmdArgsWithOptions(int argc, char ** argv, int * dim, int * ndata, int * k, double * max_double,int * seedMult, const char *shortopts, const struct option *longopts, int *indexptr);
+void getCmdArgsWithOptions(int argc, char ** argv, int * dim, int * ndata, int * k, double * max_double,int * seedMult);
 
 void getCmdArgs(int argc, char ** argv, int * dim, int * ndata, int * k, double * max_double, int * seedMult);
 

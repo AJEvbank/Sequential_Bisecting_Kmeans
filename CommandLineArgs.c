@@ -5,7 +5,7 @@
 
 #include "mainHeader.h"
 
-void getCmdArgsWithOptions(int argc, char ** argv, int * dim, int * ndata, int * k, double * max_double,int * seedMult, const char *shortopts, const struct option *longopts, int *indexptr)
+void getCmdArgsWithOptions(int argc, char ** argv, int * dim, int * ndata, int * k, double * max_double,int * seedMult)
 {
 	*dim = DIM; *ndata = NDATA; *k = K; *max_double = MAX_DOUBLE; *seedMult = SEEDMULT;
 	static char * SHORT = "";
@@ -70,9 +70,9 @@ void getCmdArgsWithOptions(int argc, char ** argv, int * dim, int * ndata, int *
 							}
 							break;
 			case 's':
-							if (isNumber(argv[5]))
+							if (isNumber(optarg))
 							{
-								*seedMult = (int)atof(argv[5]);
+								*seedMult = (int)atof(optarg);
 							}
 							if (*seedMult <= 0)
 							{
