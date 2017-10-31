@@ -97,5 +97,5 @@ if (dim == 2)
 	free(bruteForceResult);
 	free(dataArray);
 	free(query);
-	free(KM);
+	destroyKM(KM);
 }
