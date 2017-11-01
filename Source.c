@@ -92,6 +92,8 @@ if (dim == 2)
 }
 
 
+// displaySelectedFromKM(KM,1,0,1,0,0,0,0);
+
 	clearStack(result);
 	free(result);
 	free(bruteForceResult);

@@ -46,6 +46,8 @@ struct kmeans {
 	//int * cluster_group;
 };
 
+// Point stack
+
 struct stackBase {
 	int stackDepth;
 	int arraySize;
@@ -57,6 +59,21 @@ struct stackNode {
 	double distance;
 	int cluster;
 	struct stackNode * nextNode;
+};
+
+// Region stack
+
+struct stackRBase {
+	int stackDepth;
+	struct stackRNode * firstNode;
+};
+
+struct stackRNode {
+	double * lowerCorner;
+	double * widths;
+	int numPoints;
+	int dim;
+	struct stackRNode * nextNode;
 };
 
 /* Prototypes */
@@ -189,5 +206,17 @@ void pop(struct stackBase *);
 int peekDepth(struct stackBase * );
 
 void clearStack(struct stackBase *);
+
+/* StackR.c */
+
+struct stackRBase * initRStack();
+
+void pushRNode(double * cornerPoint, double * widthsOfRegion, int dim, int numPoints, struct stackRBase * thisSB);
+
+void Rpop(struct stackRBase * thisSB);
+
+int peekRDepth(struct stackRBase * thisSB);
+
+void clearRStack(struct stackRBase * thisSB);
 
 #endif

@@ -214,6 +214,26 @@ void printStack(struct stackBase *stack)
 	}
 }
 
+void printRStack(struct stackRBase * stack)
+{
+	struct stackRNode * iterator = stack->firstNode;
+	int i,j = 0;
+	printf("Stack: \n");
+	printf("stackDepth = %d\n", stack->stackDepth);
+	while (iterator != NULL)
+	{
+		printf("Region %d: \n",j);j++;
+		for (i = 0; i < iterator->dim; i++)
+		{
+			printf("dim: %d = %lf, width = %lf \n", i, (iterator->lowerCorner)[i], (iterator->widths)[i]);
+		}
+		printf("number of points = %d ", iterator->numPoints);
+		printf("\n\n");
+		iterator = iterator->nextNode;
+	}
+	printf("\n\n");
+}
+
 void displaySelectedFromKM(struct kmeans * KM, int singleValues, int dataArray, int cluster_size, int cluster_start, int cluster_radius, int cluster_centroid, int cluster_assign)
 {
 	printf("Kmeans: \n");

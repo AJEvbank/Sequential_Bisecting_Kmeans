@@ -210,6 +210,22 @@ int isNumber(const char * str)
 	}
 }
 
+void generateRandomArrayRegions(double * dataArray, int domain, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult, struct stackRBase * regions)
+{
+	int i,j,first_index;
+
+	for (i = 0; i < seeds; i++)
+	{
+		srand(seedArray[i] * seedMult);
+		first_index = i * domain/seeds;
+		for (j = 0; j < domain / seeds; j++)
+		{
+			dataArray[first_index + j] = ((double)rand() / (double)RAND_MAX) * max_double;
+		}
+	}
+	return;
+}
+
 void generateRandomArray(double * dataArray, int domain, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult)
 {
 	int i,j,first_index;

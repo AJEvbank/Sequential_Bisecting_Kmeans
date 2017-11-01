@@ -12,6 +12,7 @@ int search(struct kmeans * KM, double * query, struct stackBase * result)
   do {
       pointCount += GetNearestPoint(KM,result,query,nearestCluster);
       ClusterDistances[nearestCluster] = INFINITY;
+      // printArrayDouble(ClusterDistances,KM->k,"distance =>","ClusterDistances");
       candidateCluster = GetNearestCluster(ClusterDistances,KM->k,(result->firstNode)->distance,nearestCluster);
       /* If there is a cluster K nearer than the current nearest point,
          then reiterate searching K to update the nearest point. */

@@ -1,3 +1,8 @@
+#ifndef stack
+
+#define stack
+
+
 #include "mainHeader.h"
 
 struct stackBase * initStack(int size)
@@ -54,3 +59,5 @@ void clearStack(struct stackBase *thisSB)
 	}
 	return;
 }
+
+#endif
