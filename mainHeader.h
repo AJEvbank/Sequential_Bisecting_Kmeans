@@ -88,7 +88,9 @@ void printArrayDoubles(double * nums, int ndata, int dim);
 
 void generateRandomArrayRegions(int domain, double max_double, unsigned int seedMult, int dim, struct stackRBase * regions, int numRegions, double UpperBound, double LowerBound, int maxSize, int minSize);
 
-void generateRandomArray(double * dataArray, int domain, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult);
+void generateRandomArrayWithRegions(double * dataArray, int ndata, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult, struct stackRBase * regions, int dim);
+
+void generateRandomArray(double * dataArray, int domain, double max_double, int seeds, unsigned int * seedArray);
 
 double bruteForceSearch(double * dataArray, double * query, int dim, int ndata, double * Bresult);
 

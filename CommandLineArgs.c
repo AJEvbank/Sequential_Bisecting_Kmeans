@@ -210,7 +210,7 @@ int isNumber(const char * str)
 	}
 }
 
-void generateRandomArrayRegions(int domain, double max_double, unsigned int seedMult, int dim, struct stackRBase * regions, int numRegions, double UpperBound, double LowerBound, int maxSize, int minSize)
+void generateRandomArrayRegions(double max_double, unsigned int seedMult, int dim, struct stackRBase * regions, int numRegions, double UpperBound, double LowerBound, int maxSize, int minSize)
 {
 	int i,j,size;
 	double randomScale;
@@ -231,10 +231,12 @@ void generateRandomArrayRegions(int domain, double max_double, unsigned int seed
 	return;
 }
 
-void generateRandomArray(double * dataArray, int ndata, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult, struct stackRBase * regions, int dim)
+void generateRandomArrayWithRegions(double * dataArray, int ndata, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult, struct stackRBase * regions, int dim)
 {
-	int i,j,first_index,seedPeriod = ndata/seeds,nextSeed = 0;
+	int i,j,first_index,seedPeriod = ndata/seeds,nextSeed = 0, regionCount;
 	struct stackRNode * iterator = regions->firstNode;
+	if (iterator != NULL) { regionCount = iterator->numPoints; }
+	else { regionCount = 0; }
 	for (i = 0; i < ndata; i++)
 	{
 		if (i % seedPeriod == 0)
@@ -242,26 +244,59 @@ void generateRandomArray(double * dataArray, int ndata, double max_double, int s
 			srand(seedArray[nextSeed] * seedMult);
 			nextSeed++;
 		}
-		if (iterator != NULL)
+		first_index = i * dim;
+		if (iterator != NULL && regionCount > 0)
 		{
-
+			for (j = 0; j < dim; j++)
+			{
+				dataArray[first_index + j] = (iterator->lowerCorner)[j] + (((double)rand() / (double)RAND_MAX) * (iterator->widths)[j]);
+			}
+			regionCount--;
+		}
+		else if (iterator != NULL && regionCount == 0)
+		{
+			iterator = iterator->nextNode;
+			if (iterator != NULL)
+			{
+				regionCount = iterator->numPoints;
+				for (j = 0; j < dim; j++)
+				{
+					dataArray[first_index + j] = (iterator->lowerCorner)[j] + (((double)rand() / (double)RAND_MAX) * (iterator->widths)[j]);
+				}
+				regionCount--;
+			}
+			else
+			{
+				regionCount = -1;
+				for (j = 0; j < dim; j++)
+				{
+					dataArray[first_index + j] = ((double)rand() / (double)RAND_MAX) * max_double;
+				}
+			}
 		}
 		else
 		{
-			first_index = i *
+			for (j = 0; j < dim; j++)
+			{
+				dataArray[first_index + j] = ((double)rand() / (double)RAND_MAX) * max_double;
+			}
 		}
-
 	}
+	return;
+}
 
-	// for (i = 0; i < seeds; i++)
-	// {
-	// 	srand(seedArray[i] * seedMult);
-	// 	first_index = i * domain/seeds;
-	// 	for (j = 0; j < domain / seeds; j++)
-	// 	{
-	// 		dataArray[first_index + j] = ((double)rand() / (double)RAND_MAX) * max_double;
-	// 	}
-	// }
+void generateRandomArray(double * dataArray, int domain, double max_double, int seeds, unsigned int * seedArray)
+{
+	int i,j,first_index;
+	for (i = 0; i < seeds; i++)
+	{
+		srand(seedArray[i]);
+		first_index = i * domain/seeds;
+		for (j = 0; j < domain / seeds; j++)
+		{
+			dataArray[first_index + j] = ((double)rand() / (double)RAND_MAX) * max_double;
+		}
+	}
 	return;
 }
 

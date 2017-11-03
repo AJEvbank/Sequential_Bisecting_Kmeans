@@ -16,15 +16,17 @@ int main(int argc, char** argv) {
 
 	double * dataArray = (double *)malloc(sizeof(double)*ndata*dim);
 	double * query = (double *)malloc(sizeof(double)*dim);
+
+	struct stackRBase * regions = initRStack();
+	generateRandomArrayRegions(max_double,692,dim,regions,4,0.125,0.1,20,10);
+	printRStack(regions);
+	
 	generateRandomArray(dataArray, ndata * dim, max_double, numSeeds, &seedArray[0],seedMult);
 	querySeed = seedMult;
 	generateRandomArray(query, dim, max_double,1, &querySeed,querySeed);
 	printf("Query Point: \n");
 	printArrayDoubles(query, 1, dim);
 
-	struct stackRBase * regions = initRStack();
-	generateRandomArrayRegions(ndata,max_double,692,dim,regions,4,0.125,0.1,20,10);
-	printRStack(regions);
 	exit(0);
 //Now begin building the kmeans structure.
 /******************************************************************************************************************/
