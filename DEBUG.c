@@ -226,6 +226,10 @@ void printRStack(struct stackRBase * stack)
 		for (i = 0; i < iterator->dim; i++)
 		{
 			printf("dim: %d = %lf, width = %lf \n", i, (iterator->lowerCorner)[i], (iterator->widths)[i]);
+			if (((iterator->lowerCorner)[i] + (iterator->widths)[i]) > MAX_DOUBLE)
+			{
+				printf("OUT OF RANGE \n");
+			}
 		}
 		printf("number of points = %d ", iterator->numPoints);
 		printf("\n\n");

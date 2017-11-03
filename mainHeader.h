@@ -86,6 +86,8 @@ void printArray(int * nums, int count);
 
 void printArrayDoubles(double * nums, int ndata, int dim);
 
+void generateRandomArrayRegions(int domain, double max_double, unsigned int seedMult, int dim, struct stackRBase * regions, int numRegions, double UpperBound, double LowerBound, int maxSize, int minSize);
+
 void generateRandomArray(double * dataArray, int domain, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult);
 
 double bruteForceSearch(double * dataArray, double * query, int dim, int ndata, double * Bresult);
@@ -127,6 +129,8 @@ void write_results_parallel(int dim, int ndata, double *data, int *cluster_assig
 void printArrayDouble(double * ArrayDouble, int size, const char * text, const char * headingText);
 
 void printStack(struct stackBase *stack);
+
+void printRStack(struct stackRBase * stack);
 
 void displaySelectedFromKM(struct kmeans * KM, int singleValues, int dataArray, int cluster_size, int cluster_start, int cluster_radius, int cluster_centroid, int cluster_assign);
 
@@ -201,7 +205,7 @@ struct stackBase * initStack(int);
 
 void pushNode(double *, double, int,  struct stackBase *);
 
-void pop(struct stackBase *);
+void pop(struct stackBase * );
 
 int peekDepth(struct stackBase * );
 

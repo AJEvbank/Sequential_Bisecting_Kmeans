@@ -22,7 +22,10 @@ int main(int argc, char** argv) {
 	printf("Query Point: \n");
 	printArrayDoubles(query, 1, dim);
 
-
+	struct stackRBase * regions = initRStack();
+	generateRandomArrayRegions(ndata,max_double,692,dim,regions,4,0.125,0.1,20,10);
+	printRStack(regions);
+	exit(0);
 //Now begin building the kmeans structure.
 /******************************************************************************************************************/
 

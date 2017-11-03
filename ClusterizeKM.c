@@ -178,7 +178,7 @@ void EmptyClusters(struct kmeans * KM)
   int i,limit = KM->k;
 
   // Iterate over the cluster size array in reverse order.
-  for (i = limit; i > -1; i--)
+  for (i = limit-1; i > -1; i--)
   {
     // If a cluster is empty, delete it.
     if((KM->cluster_size)[i] == 0)

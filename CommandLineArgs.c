@@ -210,35 +210,58 @@ int isNumber(const char * str)
 	}
 }
 
-void generateRandomArrayRegions(double * dataArray, int domain, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult, struct stackRBase * regions)
+void generateRandomArrayRegions(int domain, double max_double, unsigned int seedMult, int dim, struct stackRBase * regions, int numRegions, double UpperBound, double LowerBound, int maxSize, int minSize)
 {
-	int i,j,first_index;
-
-	for (i = 0; i < seeds; i++)
+	int i,j,size;
+	double randomScale;
+	double * widths = allocateAndInitializeZeroDouble(dim);
+	double * lowerCorner = allocateAndInitializeZeroDouble(dim);
+	srand(seedMult);
+	for (i = 0; i < numRegions; i++)
 	{
-		srand(seedArray[i] * seedMult);
-		first_index = i * domain/seeds;
-		for (j = 0; j < domain / seeds; j++)
+		for (j = 0; j < dim; j++)
 		{
-			dataArray[first_index + j] = ((double)rand() / (double)RAND_MAX) * max_double;
+			randomScale = LowerBound + (((double)rand() / (double)RAND_MAX) * (UpperBound - LowerBound));
+			widths[j] = ((double)rand() / (double)RAND_MAX) * (max_double * randomScale);
+			lowerCorner[j] = ((double)rand() / (double)RAND_MAX) * (max_double - widths[j]);
 		}
+		size = (int)(minSize + (((double)rand() / (double)RAND_MAX) * (double)(maxSize - minSize)));
+		pushRNode(lowerCorner,widths,dim,size,regions);
 	}
 	return;
 }
 
-void generateRandomArray(double * dataArray, int domain, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult)
+void generateRandomArray(double * dataArray, int ndata, double max_double, int seeds, unsigned int * seedArray, unsigned int seedMult, struct stackRBase * regions, int dim)
 {
-	int i,j,first_index;
-
-	for (i = 0; i < seeds; i++)
+	int i,j,first_index,seedPeriod = ndata/seeds,nextSeed = 0;
+	struct stackRNode * iterator = regions->firstNode;
+	for (i = 0; i < ndata; i++)
 	{
-		srand(seedArray[i] * seedMult);
-		first_index = i * domain/seeds;
-		for (j = 0; j < domain / seeds; j++)
+		if (i % seedPeriod == 0)
 		{
-			dataArray[first_index + j] = ((double)rand() / (double)RAND_MAX) * max_double;
+			srand(seedArray[nextSeed] * seedMult);
+			nextSeed++;
 		}
+		if (iterator != NULL)
+		{
+
+		}
+		else
+		{
+			first_index = i *
+		}
+
 	}
+
+	// for (i = 0; i < seeds; i++)
+	// {
+	// 	srand(seedArray[i] * seedMult);
+	// 	first_index = i * domain/seeds;
+	// 	for (j = 0; j < domain / seeds; j++)
+	// 	{
+	// 		dataArray[first_index + j] = ((double)rand() / (double)RAND_MAX) * max_double;
+	// 	}
+	// }
 	return;
 }
 

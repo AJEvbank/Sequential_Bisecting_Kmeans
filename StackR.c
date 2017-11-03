@@ -57,7 +57,7 @@ void clearRStack(struct stackRBase * thisSB)
 {
 	while (thisSB->firstNode != NULL)
 	{
-		pop(thisSB);
+		Rpop(thisSB);
 	}
 	return;
 }
