@@ -66,6 +66,7 @@ printf("->>>%d points searched.\n",pointsSearched);
 				{
 					printf("%lf \t\t %lf \n",(iterator->pointArray)[i],bruteForceResult[i+1]);
 				}
+				printf("\n");
 				printf("In cluster %d \n",iterator->cluster);
 				printf("\n");
 			break;
