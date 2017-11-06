@@ -3,7 +3,7 @@
 
 void ClusterizeKM(struct kmeans * KM)
 {
-  int i,changed,count = 0;
+  int i,changed;
   for (i = 0,changed = 1; changed != 0; i++)
   {
 
@@ -16,13 +16,10 @@ void ClusterizeKM(struct kmeans * KM)
   changed = RecalculateCentroids(KM);
 
   /* Repeat the iteration until cluster assignments do not change. */
-  count++;
+
   }
 
-  printf("Number of kmeans iterations to clusterize: %d \n",count);
-
   SaveClusters(KM);
-
 
   return;
 }
